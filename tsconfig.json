@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "NodeNext", // Change this line
+    "moduleResolution": "NodeNext", // Change this line
+    "target": "ES2022" // Set a modern target
+  },
+  "include": ["server.ts"],
+  "exclude": ["node_modules"]
+}

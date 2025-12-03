@@ -1,0 +1,27 @@
+{
+  "name": "saber-club",
+  "version": "1.0.0",
+  "description": "A 3D lightsaber fighting game with physics-based combat built with Three.js.",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node server.ts",
+    "dev": "ts-node server.ts",
+    "build": "tsc",
+    "serve": "node dist/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/uuid": "^8.3.2",
+    "express": "^5.2.1",
+    "uuid": "^8.3.2",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/ws": "^8.18.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
