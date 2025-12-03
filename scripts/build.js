@@ -36,8 +36,14 @@ function copyDir(srcDir, destDir) {
     const indexSrc = path.join(root, 'index.html');
     const indexDest = path.join(dist, 'index.html');
     if (fs.existsSync(indexSrc)) {
-      copyFile(indexSrc, indexDest);
-      console.log('Copied index.html -> dist/index.html');
+      // Read index.html and replace serverUrl with environment value if provided
+      let html = fs.readFileSync(indexSrc, 'utf8');
+      const serverUrlMatch = html.match(/serverUrl\s*:\s*"([^"]+)"/);
+      const defaultServer = (serverUrlMatch && serverUrlMatch[1]) || 'ws://localhost:3000';
+      const envServer = process.env.SERVER_URL || defaultServer;
+      html = html.replace(/(serverUrl\s*:\s*)"[^"]+"/, `$1"${envServer}"`);
+      fs.writeFileSync(indexDest, html, 'utf8');
+      console.log(`Copied index.html -> dist/index.html (serverUrl=${envServer})`);
     } else {
       console.warn('No index.html found at project root; skipping copy.');
     }
