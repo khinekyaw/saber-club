@@ -57,6 +57,15 @@ function copyDir(srcDir, destDir) {
       console.log('No public/ directory; skipping.');
     }
 
+    const srcSrc = path.join(root, 'src');
+    const srcDest = path.join(dist, 'src');
+    if (fs.existsSync(srcSrc)) {
+      copyDir(srcSrc, srcDest);
+      console.log('Copied src/ -> dist/src/');
+    } else {
+      console.log('No src/ directory; skipping.');
+    }
+
     console.log('Build script finished.');
   } catch (err) {
     console.error('Build script failed:', err);

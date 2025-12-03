@@ -126,6 +126,7 @@ const app = express();
 const server = http.createServer(app); 
 
 app.use(express.static('public'));
+app.use(express.static('.'));
 
 // 2. Configure Express to serve the static index.html file
 app.get('/', (req, res) => {
