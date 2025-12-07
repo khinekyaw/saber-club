@@ -84,6 +84,7 @@ export function resetGameState(camera, enemy, isHost) {
   camera.rotation.set(0, isHost ? Math.PI : 0, 0)
   enemy.group.position.set(0, 0, -3)
   enemy.group.rotation.set(0, 0, 0)
+  enemy.group.scale.set(1, 1, 1)
   enemy.parts.forEach((p) => p.material.color.setHex(0xaa2222))
   enemy.health = CONFIG.player.maxHealth
   enemy.setSaberOn(true)

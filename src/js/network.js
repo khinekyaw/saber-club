@@ -302,7 +302,10 @@ export const NetworkManager = {
     const rs = this.getInterpolatedState()
     enemy.group.position.set(rs.position.x, 0, rs.position.z)
     enemy.group.rotation.y = rs.rotation + Math.PI
-    enemy.saber.rotation.x = rs.saberRotation.x
+    // Flip the model horizontally so saber appears on correct side
+    enemy.group.scale.x = -1
+    // Negate X rotation due to flipped scale, keep Z rotation normal
+    enemy.saber.rotation.x = -rs.saberRotation.x
     enemy.saber.rotation.z = rs.saberRotation.y
     enemy.setSaberOn(rs.saberOn)
     const esp = enemy.getSaberPositions()
