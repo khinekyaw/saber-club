@@ -27,6 +27,7 @@ function initThreeJS() {
     CONFIG.camera.far
   )
   camera.position.set(0, CONFIG.player.height, 3)
+  camera.rotation.order = 'YXZ'
   camera.rotation.set(0, 0, 0)
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -35,11 +36,15 @@ function initThreeJS() {
   document
     .getElementById("game-container")
     .appendChild(renderer.domElement)
-  scene.add(new THREE.AmbientLight(0x111122, 0.5))
-  const spot = new THREE.SpotLight(0xffffff, 0.8)
-  spot.position.set(0, 20, 0)
-  spot.castShadow = true
-  scene.add(spot)
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6))
+  const sun = new THREE.DirectionalLight(0xfff8dc, 1.2)
+  sun.position.set(10, 20, 10)
+  sun.castShadow = true
+  sun.shadow.mapSize.width = 2048
+  sun.shadow.mapSize.height = 2048
+  sun.shadow.camera.near = 0.5
+  sun.shadow.camera.far = 50
+  scene.add(sun)
   createArena(scene)
 }
 
@@ -65,6 +70,10 @@ function startGame(mode) {
   resetGameState(camera, enemy, NetworkManager.isHost)
   player.setSaberOn(true)
   updateHealthBars()
+
+  // Request pointer lock for FPS controls
+  document.body.requestPointerLock()
+
   if (mode === "pvp")
     networkUpdateInterval = setInterval(
       () => NetworkManager.sendPlayerState(camera),

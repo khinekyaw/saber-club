@@ -32,8 +32,8 @@ export const CONFIG = {
     radius: 15,
     pillarCount: 8,
     pillarDistance: 12,
-    backgroundColor: 0x050510,
-    fogDensity: 0.02,
+    backgroundColor: 0x87ceeb,
+    fogDensity: 0.005,
   },
   physics: { sparkCount: 20, sparkLifetime: 1 },
   ai: {

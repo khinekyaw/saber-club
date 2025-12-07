@@ -17,6 +17,9 @@ export function setupInputHandlers(player) {
     }
     if (e.key === "Shift") state.keys.shift = true
     if (k === "f") togglePlayerSaber(player)
+    if (e.key === "Escape" && document.pointerLockElement) {
+      document.exitPointerLock()
+    }
   })
 
   document.addEventListener("keyup", (e) => {
@@ -30,20 +33,52 @@ export function setupInputHandlers(player) {
     const gameStarted = state.gameOver === false &&
                         (gameMode === "solo" || gameMode === "pvp")
     if (!gameStarted) return
-    const cx = window.innerWidth / 2,
-      cy = window.innerHeight / 2
-    state.mousePosition.x = Math.max(-1, Math.min(1, (e.clientX - cx) / cx))
-    state.mousePosition.y = Math.max(-1, Math.min(1, (e.clientY - cy) / cy))
-    if (!state.keys.shift) {
-      const camera = e.view?.camera || window.camera
-      if (camera) {
-        camera.rotation.y -= e.movementX * 0.002
-        camera.rotation.x -= e.movementY * 0.002
-        camera.rotation.x = Math.max(
-          -Math.PI / 2,
-          Math.min(Math.PI / 2, camera.rotation.x)
-        )
+
+    if (document.pointerLockElement) {
+      const camera = window.camera
+
+      if (state.keys.shift) {
+        // SHIFT pressed: Only move saber, not camera
+        state.mousePosition.x = Math.max(-1, Math.min(1, state.mousePosition.x + e.movementX * 0.01))
+        state.mousePosition.y = Math.max(-1, Math.min(1, state.mousePosition.y + e.movementY * 0.01))
+      } else {
+        // SHIFT not pressed: Only rotate camera, keep saber centered
+        state.mousePosition.x = 0
+        state.mousePosition.y = 0
+
+        if (camera) {
+          // Update yaw and pitch separately to avoid gimbal lock
+          state.cameraYaw -= e.movementX * 0.002
+          state.cameraPitch -= e.movementY * 0.002
+
+          // Clamp pitch to prevent flipping
+          state.cameraPitch = Math.max(
+            -Math.PI / 2,
+            Math.min(Math.PI / 2, state.cameraPitch)
+          )
+
+          // Apply rotations in the correct order
+          camera.rotation.order = 'YXZ'
+          camera.rotation.y = state.cameraYaw
+          camera.rotation.x = state.cameraPitch
+          camera.rotation.z = 0
+        }
       }
+    } else {
+      // Fallback to screen position if not in pointer lock
+      const cx = window.innerWidth / 2,
+        cy = window.innerHeight / 2
+      state.mousePosition.x = Math.max(-1, Math.min(1, (e.clientX - cx) / cx))
+      state.mousePosition.y = Math.max(-1, Math.min(1, (e.clientY - cy) / cy))
+    }
+  })
+
+  // Request pointer lock when clicking on the game container
+  document.getElementById("game-container").addEventListener("click", () => {
+    const gameStarted = state.gameOver === false &&
+                        (gameMode === "solo" || gameMode === "pvp")
+    if (gameStarted && !document.pointerLockElement) {
+      document.body.requestPointerLock()
     }
   })
 }

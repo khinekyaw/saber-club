@@ -41,6 +41,8 @@ export const state = {
   playerHealth: CONFIG.player.maxHealth,
   enemyHealth: CONFIG.player.maxHealth,
   gameOver: false,
+  cameraYaw: 0,
+  cameraPitch: 0,
 }
 
 export const aiState = {
@@ -69,6 +71,8 @@ export function resetGameState(camera, enemy, isHost) {
   state.blockPushBack = { x: 0, y: 0 }
   state.playerSaberOn = true
   state.saberRotation = { x: 0, y: 0 }
+  state.cameraYaw = isHost ? Math.PI : 0
+  state.cameraPitch = 0
   aiState.currentAction = "idle"
   aiState.thinkTimer = 0
   aiState.saberRotation = { x: 0, y: 0 }
@@ -76,6 +80,7 @@ export function resetGameState(camera, enemy, isHost) {
   aiState.blockPushBack = { x: 0, y: 0 }
   aiState.swingSpeed = 0
   camera.position.set(0, CONFIG.player.height, isHost ? -3 : 3)
+  camera.rotation.order = 'YXZ'
   camera.rotation.set(0, isHost ? Math.PI : 0, 0)
   enemy.group.position.set(0, 0, -3)
   enemy.group.rotation.set(0, 0, 0)
